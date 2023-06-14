@@ -11,7 +11,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.first.demo.enitity.Customer;
@@ -45,14 +47,15 @@ public class CustomerDao {
 	}
 
 	public void updateById(int id, Customer customer) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("name", customer.getName());
-		params.put("email", customer.getEmail());
-		params.put("age", customer.getAge());
-		params.put("sex", customer.getSex());
-		params.put("id", id);
+		MapSqlParameterSource param=new MapSqlParameterSource();
+		
+		param.addValue("name", customer.getName());
+		param.addValue("email", customer.getEmail());
+		param.addValue("age", customer.getAge());
+		param.addValue("sex", customer.getSex());
+		param.addValue("id", id);
 		try {
-			int rows = namedparameterjdbctemplate.update(UPDATE, params);
+			int rows = namedparameterjdbctemplate.update(UPDATE, param);
 			if (rows > 0)
 				log.info("updated the rows with id ::::" + id);
 
